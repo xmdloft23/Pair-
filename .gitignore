@@ -24,7 +24,7 @@ build/
 
 # Session files
 
-*.json
+
 
 # Temporary files
 tmp/

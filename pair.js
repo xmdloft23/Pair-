@@ -68,8 +68,6 @@ router.get('/', async (req, res) => {
                     console.log("📱 Sending session file to user...");
                     
                     try {
-                        // const knightbotstart = '120363161513685998@newsletter';
-                        // await KnightBot.newsletterFollow(knightbotstart)
                         await delay(5000); // Reduced delay for better UX
                         const sessionKnight = fs.readFileSync(dirs + '/creds.json');
 
