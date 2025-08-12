@@ -68,7 +68,6 @@ router.get('/', async (req, res) => {
                     console.log("📱 Sending session file to user...");
                     
                     try {
-                        await delay(5000); // Reduced delay for better UX
                         const sessionKnight = fs.readFileSync(dirs + '/creds.json');
 
                         // Send session file to user
