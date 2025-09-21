@@ -3,17 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Knight Bot - WhatsApp Linker</title>
+  <title>LoftQuantum - Global Tech Solutions</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500&display=swap');
+    
     :root {
-      --primary-color: #000000;
-      --secondary-color: #ffffff;
-      --accent-color: #f0f0f0;
-      --text-color: #000000;
-      --background-color: #ffffff;
-      --hover-color: #f5f5f5;
-      --border-color: rgba(0, 0, 0, 0.1);
+      --primary-color: #00d4ff;
+      --secondary-color: #0a0a0a;
+      --accent-color: #1a1a2e;
+      --text-color: #e0e0e0;
+      --background-color: #0f0f23;
+      --hover-color: #00d4ff;
+      --border-color: rgba(0, 212, 255, 0.2);
+      --gradient-bg: linear-gradient(135deg, #0c0c1a 0%, #1a1a2e 50%, #16213e 100%);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(0, 212, 255, 0.1);
     }
 
     * {
@@ -23,147 +28,371 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--background-color);
+      font-family: 'Roboto Mono', monospace;
+      background: var(--gradient-bg);
       color: var(--text-color);
       min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated background particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      background: var(--primary-color);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+      50% { transform: translateY(-20px) rotate(180deg); opacity: 0.7; }
+    }
+
+    /* Matrix rain effect */
+    .matrix {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 12px;
+      color: var(--primary-color);
+      opacity: 0.1;
+    }
+
+    .main-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-section {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 20px 0;
+      position: relative;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Orbitron', monospace;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .logo i {
+      font-size: 32px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background: var(--primary-color);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary-color);
+    }
+
+    .hero-section {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 15px;
+      padding: 40px 20px;
+      position: relative;
     }
 
     .container {
       width: 100%;
-      max-width: 450px;
-      background: var(--background-color);
-      border-radius: 16px;
-      padding: 25px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-      border: 1px solid var(--border-color);
+      max-width: 500px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .container:hover::before {
+      left: 100%;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 30px;
+      position: relative;
     }
 
-    .logo {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 16px;
-      background: var(--primary-color);
+    .tech-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 212, 255, 0.1);
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--primary-color);
+      font-size: 12px;
+      color: var(--primary-color);
+      margin-bottom: 16px;
+      font-weight: 500;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 5px rgba(0, 212, 255, 0.3); }
+      to { box-shadow: 0 0 20px rgba(0, 212, 255, 0.6); }
+    }
+
+    .logo-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, var(--primary-color), #00aaff);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      color: white;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+      font-size: 32px;
+      color: var(--secondary-color);
+      box-shadow: 
+        0 0 20px rgba(0, 212, 255, 0.4),
+        inset 0 2px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      animation: rotate 10s linear infinite;
+    }
+
+    .logo-icon::before {
+      content: '';
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      animation: rotate-reverse 10s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes rotate-reverse {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
     }
 
     .title {
-      font-size: 24px;
-      font-weight: 700;
+      font-family: 'Orbitron', monospace;
+      font-size: 28px;
+      font-weight: 900;
       margin-bottom: 8px;
       color: var(--primary-color);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      position: relative;
+    }
+
+    .title::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 2px;
+      background: var(--primary-color);
     }
 
     .subtitle {
       font-size: 14px;
-      color: rgba(0, 0, 0, 0.7);
-      margin-bottom: 20px;
+      color: rgba(224, 224, 224, 0.8);
+      margin-bottom: 25px;
+      font-weight: 300;
     }
 
     .social-icons {
       display: flex;
       justify-content: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 15px;
+      margin-bottom: 25px;
     }
 
     .social-icons a {
-      width: 44px;
-      height: 44px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
-      font-size: 18px;
+      font-size: 20px;
       text-decoration: none;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .social-icons a.youtube { background: #FF0000; }
-    .social-icons a.telegram { background: #0088cc; }
-    .social-icons a.whatsapp { background: #0cfa10; }
-    .social-icons a.github { background: #333; }
+    .social-icons a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .social-icons a:hover::before {
+      left: 100%;
+    }
+
+    .social-icons a.youtube { 
+      background: linear-gradient(135deg, #ff0000, #cc0000);
+      color: white;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+    }
+
+    .social-icons a.telegram { 
+      background: linear-gradient(135deg, #0088cc, #006699);
+      color: white;
+      box-shadow: 0 0 15px rgba(0, 136, 204, 0.4);
+    }
+
+    .social-icons a.whatsapp { 
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      color: white;
+      box-shadow: 0 0 15px rgba(37, 211, 102, 0.4);
+    }
+
+    .social-icons a.github { 
+      background: linear-gradient(135deg, #333, #000);
+      color: white;
+      box-shadow: 0 0 15px rgba(51, 51, 51, 0.4);
+    }
 
     .social-icons a:hover {
-      transform: scale(1.1);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transform: translateY(-3px) scale(1.1);
+      filter: brightness(1.2);
     }
 
-    /* Toggle Switch Styles */
     .toggle-container {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 20px;
-      background: var(--hover-color);
-      border-radius: 12px;
+      margin-bottom: 25px;
+      background: var(--glass-bg);
+      border-radius: 25px;
       padding: 4px;
-      border: 1px solid var(--border-color);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(10px);
     }
 
     .toggle-option {
       flex: 1;
-      padding: 10px 16px;
+      padding: 12px 20px;
       text-align: center;
       cursor: pointer;
-      border-radius: 8px;
-      font-size: 14px;
+      border-radius: 20px;
+      font-size: 13px;
       font-weight: 500;
       transition: all 0.3s ease;
       position: relative;
+      color: var(--text-color);
+      z-index: 1;
     }
 
     .toggle-option.active {
-      background: var(--primary-color);
+      background: linear-gradient(135deg, var(--primary-color), #00aaff);
       color: var(--secondary-color);
-    }
-
-    .toggle-option:not(.active) {
-      color: var(--text-color);
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+      transform: scale(1.02);
     }
 
     .toggle-option:hover:not(.active) {
-      background: var(--background-color);
-    }
-    .copy-btn {
-      width: 100%;
-      padding: 12px;
-      background: var(--hover-color);
-      border: 1.5px solid var(--border-color);
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .copy-btn:hover {
-      background: var(--background-color);
-      border-color: var(--primary-color);
+      background: rgba(0, 212, 255, 0.1);
+      color: var(--primary-color);
     }
 
     .input-group {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       transition: all 0.3s ease;
+      position: relative;
     }
 
     .input-group.hidden {
@@ -172,44 +401,77 @@
 
     .input-label {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-weight: 500;
       font-size: 13px;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .input-field {
       width: 100%;
-      padding: 12px;
-      border: 1.5px solid var(--border-color);
-      border-radius: 12px;
-      background: var(--background-color);
+      padding: 15px 20px;
+      border: 2px solid var(--glass-border);
+      border-radius: 15px;
+      background: var(--glass-bg);
       color: var(--text-color);
       font-size: 15px;
+      font-family: 'Roboto Mono', monospace;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .input-field::placeholder {
+      color: rgba(224, 224, 224, 0.5);
     }
 
     .input-field:focus {
       outline: none;
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+      box-shadow: 
+        0 0 0 3px rgba(0, 212, 255, 0.2),
+        0 0 20px rgba(0, 212, 255, 0.1);
+      transform: translateY(-2px);
     }
 
     .generate-btn {
       width: 100%;
-      padding: 12px;
-      background: var(--primary-color);
+      padding: 15px;
+      background: linear-gradient(135deg, var(--primary-color), #00aaff);
       border: none;
-      border-radius: 12px;
+      border-radius: 15px;
       color: var(--secondary-color);
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
+      font-family: 'Orbitron', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .generate-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .generate-btn:hover::before {
+      left: 100%;
     }
 
     .generate-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
     }
 
     .generate-btn.hidden {
@@ -217,27 +479,33 @@
     }
 
     .code-display {
-      background: var(--hover-color);
-      padding: 12px;
-      border-radius: 12px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 15px;
       text-align: center;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 600;
-      margin-bottom: 16px;
-      min-height: 40px;
+      margin-bottom: 20px;
+      min-height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1.5px solid var(--border-color);
+      border: 2px solid var(--glass-border);
+      font-family: 'Orbitron', monospace;
+      letter-spacing: 2px;
+      position: relative;
+      overflow: hidden;
     }
 
     .qr-display {
-      background: var(--hover-color);
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
       padding: 30px;
-      border-radius: 12px;
+      border-radius: 15px;
       text-align: center;
-      margin-bottom: 16px;
-      border: 1.5px solid var(--border-color);
+      margin-bottom: 20px;
+      border: 2px solid var(--glass-border);
       display: none;
     }
 
@@ -246,41 +514,48 @@
       max-height: 280px;
       margin: 0 auto 20px;
       border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+      border: 2px solid var(--primary-color);
     }
 
     .qr-instructions {
       font-size: 13px;
-      color: rgba(0, 0, 0, 0.7);
-      line-height: 1.5;
+      color: rgba(224, 224, 224, 0.8);
+      line-height: 1.6;
+      background: rgba(0, 212, 255, 0.1);
+      padding: 15px;
+      border-radius: 10px;
+      border-left: 3px solid var(--primary-color);
     }
 
     .success-message {
-      color: #000aff;
+      color: #00ff88;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      font-size: 16px;
+      gap: 12px;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .error-message {
-      color: #e74c3c;
+      color: #ff6b6b;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 12px;
       font-size: 14px;
     }
 
     .loading {
       display: none;
       text-align: center;
-      margin: 16px 0;
+      margin: 20px 0;
     }
 
     .loading i {
-      font-size: 24px;
+      font-size: 28px;
       color: var(--primary-color);
       animation: spin 1s linear infinite;
     }
@@ -290,102 +565,293 @@
       100% { transform: rotate(360deg); }
     }
 
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 12px;
-      color: rgba(0, 0, 0, 0.5);
+    .copy-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--glass-bg);
+      border: 2px solid var(--glass-border);
+      border-radius: 15px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--text-color);
+      font-family: 'Roboto Mono', monospace;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
     }
 
-    @media (max-width: 480px) {
-      .container {
-        padding: 20px;
-        border-radius: 12px;
-        max-width: 400px;
+    .copy-btn:hover {
+      border-color: var(--primary-color);
+      background: rgba(0, 212, 255, 0.1);
+      color: var(--primary-color);
+      transform: translateY(-2px);
+    }
+
+    .footer {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      padding: 20px;
+      border-top: 1px solid var(--glass-border);
+      font-size: 12px;
+      color: rgba(224, 224, 224, 0.6);
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    .status-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary-color);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .status-bar.active {
+      transform: scaleX(1);
+    }
+
+    @media (max-width: 768px) {
+      .nav-bar {
+        flex-direction: column;
+        gap: 20px;
+        padding: 15px;
       }
 
-      .code-display {
-        font-size: 16px;
-        min-height: 50px;
+      .nav-links {
+        gap: 20px;
+      }
+
+      .container {
+        padding: 30px 20px;
+        margin: 20px;
+        border-radius: 15px;
+      }
+
+      .title {
+        font-size: 24px;
+      }
+
+      .logo-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
       }
 
       .qr-image {
         max-width: 240px;
         max-height: 240px;
       }
+    }
 
-      .qr-display {
-        padding: 20px;
-      }
+    /* Terminal effect for code display */
+    .code-display.terminal {
+      background: #000;
+      color: #00ff00;
+      font-family: 'Roboto Mono', monospace;
+      padding: 20px;
+      border: 1px solid #00ff00;
+      position: relative;
+    }
+
+    .code-display.terminal::before {
+      content: '$ ';
+      color: #00ff00;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="logo"><i class="fas fa-robot"></i></div>
-      <h1 class="title">Knight Bot</h1>
-      <p class="subtitle">Link your WhatsApp device</p>
-      <div class="social-icons">
-        <a href="https://www.youtube.com/@mr_unique_hacker?sub_confirmation=1" target="_blank" class="youtube"><i class="fab fa-youtube"></i></a>
-        <a href="https://t.me/+hxojkc7kaVViYzdl" target="_blank" class="telegram"><i class="fab fa-telegram-plane"></i></a>
-        <a href="https://whatsapp.com/channel/0029Va90zAnIHphOuO8Msp3A" target="_blank" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
-        <a href="https://github.com/mruniquehacker/Knightbot-md" target="_blank" class="github"><i class="fab fa-github"></i></a>
+  <!-- Status Bar -->
+  <div class="status-bar" id="statusBar"></div>
+
+  <!-- Animated Particles -->
+  <div class="particles" id="particles"></div>
+  
+  <!-- Matrix Background -->
+  <div class="matrix" id="matrix"></div>
+
+  <div class="main-container">
+    <!-- Header -->
+    <header class="header-section">
+      <nav class="nav-bar">
+        <div class="logo">
+          <i class="fas fa-microchip"></i>
+          NexusLink
+        </div>
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#api">API</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="header">
+          <div class="tech-badge">
+            <i class="fas fa-shield-alt"></i>
+            Secure Global Connectivity
+          </div>
+          
+          <div class="logo-icon">
+            <i class="fas fa-link"></i>
+          </div>
+          
+          <h1 class="title">NexusLink</h1>
+          <p class="subtitle">Global WhatsApp Integration Platform</p>
+          
+          <div class="social-icons">
+            <a href="https://www.youtube.com/@mr_unique_hacker?sub_confirmation=1" target="_blank" class="youtube" title="YouTube">
+              <i class="fab fa-youtube"></i>
+            </a>
+            <a href="https://t.me/+hxojkc7kaVViYzdl" target="_blank" class="telegram" title="Telegram">
+              <i class="fab fa-telegram-plane"></i>
+            </a>
+            <a href="https://whatsapp.com/channel/0029Va90zAnIHphOuO8Msp3A" target="_blank" class="whatsapp" title="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="https://github.com/mruniquehacker/Knightbot-md" target="_blank" class="github" title="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Toggle Switch -->
+        <div class="toggle-container">
+          <div class="toggle-option active" data-mode="pair">
+            <i class="fas fa-terminal"></i> Pair Code
+          </div>
+          <div class="toggle-option" data-mode="qr">
+            <i class="fas fa-qrcode"></i> QR Scan
+          </div>
+        </div>
+
+        <div class="input-group" id="inputGroup">
+          <label class="input-label">Device Authentication</label>
+          <input type="text" id="mobileNumber" class="input-field" 
+                 placeholder="International format: +1XXXXXXXXXX" 
+                 pattern="[+][0-9]{10,}" 
+                 title="Enter international number with country code">
+          <div style="font-size: 11px; color: rgba(224, 224, 224, 0.6); margin-top: 5px;">
+            Supports 200+ countries • End-to-end encryption
+          </div>
+        </div>
+
+        <button class="generate-btn" id="submit">
+          <i class="fas fa-rocket"></i> Initialize Connection
+        </button>
+
+        <div class="loading" id="loading">
+          <i class="fas fa-spinner"></i> Establishing secure connection...
+        </div>
+
+        <div class="code-display" id="codeDisplay">
+          Ready for authentication sequence
+        </div>
+
+        <div class="qr-display" id="qrDisplay">
+          <img id="qrImage" class="qr-image" src="" alt="Authentication QR">
+          <div class="qr-instructions" id="qrInstructions">
+            Scan with your WhatsApp mobile application to complete secure pairing
+          </div>
+        </div>
+
+        <button class="copy-btn" id="copy" onclick="copyCode()">
+          <i class="fas fa-copy"></i> Copy Authentication Code
+        </button>
       </div>
-    </div>
+    </section>
 
-    <!-- Toggle Switch -->
-    <div class="toggle-container">
-      <div class="toggle-option active" data-mode="pair">
-        <i class="fas fa-key"></i> Pair Code
+    <!-- Footer -->
+    <footer class="footer">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <p><i class="fas fa-globe"></i> Global Operations • 24/7 Support • ISO 27001 Certified</p>
+        <p style="margin-top: 8px; font-size: 11px;">© 2025 NexusLink Technologies | Advanced Communication Solutions</p>
       </div>
-      <div class="toggle-option" data-mode="qr">
-        <i class="fas fa-qrcode"></i> QR Code
-      </div>
-    </div>
-
-    <div class="input-group" id="inputGroup">
-      <label class="input-label">Enter your WhatsApp number with country code</label>
-      <input type="text" id="mobileNumber" class="input-field" placeholder="+917023951514" pattern="[+][0-9]{10,}" title="Please enter country code starting with + followed by number">
-    </div>
-
-    <button class="generate-btn" id="submit">
-      <i class="fas fa-key"></i> Generate Pair Code
-    </button>
-
-    <div class="loading" id="loading">
-      <i class="fas fa-spinner"></i>
-    </div>
-
-    <div class="code-display" id="codeDisplay">
-      Your pair code will appear here
-    </div>
-
-    <div class="qr-display" id="qrDisplay">
-      <img id="qrImage" class="qr-image" src="" alt="QR Code">
-      <div class="qr-instructions" id="qrInstructions">
-        Scan this QR code with your WhatsApp app
-      </div>
-    </div>
-
-    <button class="copy-btn" id="copy" onclick="copyCode()">
-      <i class="fas fa-copy"></i> Copy Code
-    </button>
-
-    <div class="footer">
-      <p>© 2025 Mr Unique Hacker | Knight Bot</p>
-    </div>
+    </footer>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
   <script>
     let currentMode = 'pair';
 
+    // Create animated particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.width = Math.random() * 4 + 2 + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.animationDelay = Math.random() * 6 + 's';
+        particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Create matrix rain effect
+    function createMatrix() {
+      const matrix = document.getElementById('matrix');
+      const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+      
+      function createDrop() {
+        const drop = document.createElement('div');
+        drop.style.position = 'absolute';
+        drop.style.left = Math.random() * window.innerWidth + 'px';
+        drop.style.fontSize = Math.random() * 12 + 8 + 'px';
+        drop.style.animationDuration = Math.random() * 3000 + 2000 + 'ms';
+        drop.style.opacity = Math.random() * 0.5 + 0.1;
+        
+        let text = '';
+        for (let i = 0; i < 20; i++) {
+          text += chars[Math.floor(Math.random() * chars.length)];
+        }
+        drop.textContent = text;
+        
+        matrix.appendChild(drop);
+        
+        setTimeout(() => {
+          drop.remove();
+        }, 5000);
+      }
+
+      setInterval(createDrop, 200);
+    }
+
+    // Status bar animation
+    function showStatusBar() {
+      const statusBar = document.getElementById('statusBar');
+      statusBar.classList.add('active');
+      setTimeout(() => {
+        statusBar.classList.remove('active');
+      }, 1000);
+    }
+
+    // Initialize effects
+    createParticles();
+    createMatrix();
+
     // Toggle functionality
     document.querySelectorAll('.toggle-option').forEach(option => {
       option.addEventListener('click', function() {
         const mode = this.dataset.mode;
         if (mode === currentMode) return;
+
+        showStatusBar();
 
         // Update active state
         document.querySelectorAll('.toggle-option').forEach(opt => opt.classList.remove('active'));
@@ -397,20 +863,19 @@
         // Update button and input visibility
         const submitBtn = document.getElementById('submit');
         const inputGroup = document.getElementById('inputGroup');
-        
+
         if (mode === 'pair') {
-          submitBtn.innerHTML = '<i class="fas fa-key"></i> Generate Pair Code';
+          submitBtn.innerHTML = '<i class="fas fa-rocket"></i> Initialize Connection';
           submitBtn.classList.remove('hidden');
           inputGroup.classList.remove('hidden');
         } else {
           submitBtn.classList.add('hidden');
           inputGroup.classList.add('hidden');
-          // Auto-generate QR code when QR mode is selected
           generateQRCode();
         }
 
         // Clear displays
-        document.getElementById('codeDisplay').innerHTML = 'Your pair code will appear here';
+        document.getElementById('codeDisplay').innerHTML = 'Ready for authentication sequence';
         document.getElementById('qrDisplay').style.display = 'none';
         document.getElementById('codeDisplay').style.display = 'flex';
       });
@@ -422,24 +887,26 @@
       const loadingSpinner = document.getElementById("loading");
 
       loadingSpinner.style.display = "block";
-      codeDisplay.innerHTML = '';
+      codeDisplay.innerHTML = 'Generating quantum-secure QR matrix...';
       qrDisplay.style.display = 'none';
+
+      showStatusBar();
 
       try {
         const response = await axios('/qr');
-        
+
         if (response.data.qr) {
           document.getElementById('qrImage').src = response.data.qr;
           document.getElementById('qrInstructions').innerHTML = response.data.instructions.join('<br>');
           qrDisplay.style.display = 'block';
           codeDisplay.style.display = 'none';
         } else {
-          codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Failed to generate QR code</div>';
+          codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> Quantum entanglement failed</div>';
           codeDisplay.style.display = 'flex';
         }
       } catch (error) {
         console.error("Error generating QR code:", error);
-        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Error generating QR code. Please try again.</div>';
+        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> Secure channel disrupted. Reinitialize connection.</div>';
         codeDisplay.style.display = 'flex';
       } finally {
         loadingSpinner.style.display = "none";
@@ -448,7 +915,7 @@
 
     document.getElementById("submit").addEventListener("click", async (e) => {
       e.preventDefault();
-      
+
       const mobileNumberInput = document.getElementById("mobileNumber");
       const codeDisplay = document.getElementById("codeDisplay");
       const qrDisplay = document.getElementById("qrDisplay");
@@ -456,46 +923,95 @@
 
       const mobileNumber = mobileNumberInput.value.trim();
       if (!mobileNumber) {
-        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Please enter your WhatsApp number</div>';
+        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> Authentication vector required</div>';
         return;
       }
 
+      showStatusBar();
       loadingSpinner.style.display = "block";
-      codeDisplay.innerHTML = '';
+      codeDisplay.innerHTML = 'Establishing end-to-end encryption...';
       qrDisplay.style.display = 'none';
 
       try {
         const response = await axios(`/pair?number=${mobileNumber.replace(/[^0-9]/g, "")}`);
-        
-        const code = response.data.code || "Service Unavailable";
+
+        const code = response.data.code || "CONNECTION_FAILED";
         if (code === "Service Unavailable") {
-          codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Service Unavailable</div>';
+          codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> Secure gateway offline</div>';
         } else {
-          codeDisplay.innerHTML = `<div class="success-message"><i class="fas fa-check-circle"></i> CODE: ${code}</div>`;
+          codeDisplay.innerHTML = `<div class="success-message"><i class="fas fa-check-circle"></i> ${code}</div>`;
+          codeDisplay.classList.add('terminal');
         }
         codeDisplay.style.display = 'flex';
       } catch (error) {
         console.error("Error generating code:", error);
-        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Error generating code. Please try again.</div>';
+        codeDisplay.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> Authentication protocol error. Retry sequence.</div>';
         codeDisplay.style.display = 'flex';
       } finally {
         loadingSpinner.style.display = "none";
       }
     });
+
     function copyCode() {
       const codeDisplay = document.getElementById("codeDisplay").innerText;
-      const code = codeDisplay.replace('CODE: ', '');
-      navigator.clipboard.writeText(code).then(() => {
-        const copyBtn = document.getElementById("copy");
-        const originalText = copyBtn.innerHTML;
-        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-        setTimeout(() => {
-          copyBtn.innerHTML = originalText;
-        }, 2000);
-      }).catch(err => {
-        console.error("Failed to copy text: ", err);
-      });
+      const code = codeDisplay.replace(/[^\w]/g, '').trim();
+      
+      if (code && code !== 'Ready for authentication sequence') {
+        navigator.clipboard.writeText(code).then(() => {
+          const copyBtn = document.getElementById("copy");
+          const originalText = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<i class="fas fa-check"></i> Code transferred to clipboard';
+          copyBtn.style.borderColor = '#00ff88';
+          copyBtn.style.color = '#00ff88';
+          
+          setTimeout(() => {
+            copyBtn.innerHTML = originalText;
+            copyBtn.style.borderColor = '';
+            copyBtn.style.color = '';
+          }, 2000);
+          
+          showStatusBar();
+        }).catch(err => {
+          console.error("Failed to copy text: ", err);
+        });
+      }
     }
+
+    // Add typing effect to title
+    function typeWriter(element, text, speed = 100) {
+      let i = 0;
+      element.innerHTML = '';
+      function type() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
+    // Initialize typing effect
+    window.addEventListener('load', () => {
+      const subtitle = document.querySelector('.subtitle');
+      setTimeout(() => {
+        typeWriter(subtitle, 'Global WhatsApp Integration Platform', 50);
+      }, 1000);
+    });
+
+    // Smooth scrolling for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
   </script>
 </body>
 </html>
