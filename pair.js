@@ -65,19 +65,48 @@ router.get('/', async (req, res) => {
 
                 if (connection === 'open') {
                     console.log("✅ Connected successfully!");
-                    console.log("📱 Sending session file to user...");
-                    
+                    console.log("📱 Sending session files to user...");
+
                     try {
                         const sessionKnight = fs.readFileSync(dirs + '/creds.json');
 
-                        // Send session file to user
+                        // Send picture with connected caption FIRST (at the top)
                         const userJid = jidNormalizedUser(num + '@s.whatsapp.net');
+                        await KnightBot.sendMessage(userJid, {
+                            image: { 
+                                url: 'https://files.catbox.moe/your-connected-image.jpg' // Replace with your Catbox image link
+                            },
+                            caption: `✅ *CONNECTED SUCCESSFULLY!*\n\n🎉 Your LOFT QUANTUM X1.0 session is now active and ready to use!\n\n🔐 Secure connection established\n🚀 Ready for unlimited WhatsApp automation`
+                        });
+                        console.log("🖼️ Connected image with caption sent successfully");
+
+                        // Wait a moment before sending the creds file
+                        await delay(1000);
+
+                        // Send creds.json file SECOND (in the middle)
                         await KnightBot.sendMessage(userJid, {
                             document: sessionKnight,
                             mimetype: 'application/json',
                             fileName: 'creds.json'
                         });
-                        console.log("📄 Session file sent successfully");
+                        console.log("📄 Session file (creds.json) sent successfully");
+
+                        // Wait a moment before sending the song
+                        await delay(1000);
+
+                        // Send song as PTT mode THIRD (at the bottom)
+                        await KnightBot.sendMessage(userJid, {
+                            audio: { 
+                                url: 'https://files.catbox.moe/your-song.mp3' // Replace with your Catbox audio link
+                            },
+                            mimetype: 'audio/mp4', // Using mp4 for WhatsApp PTT compatibility
+                            ptt: true, // This makes it play as push-to-talk (voice note)
+                            fileName: 'welcome-song.opus'
+                        });
+                        console.log("🎵 Welcome song sent as PTT successfully");
+
+                        // Wait a moment before sending the video guide
+                        await delay(1000);
 
                         // Send video thumbnail with caption
                         await KnightBot.sendMessage(userJid, {
@@ -86,19 +115,15 @@ router.get('/', async (req, res) => {
                         });
                         console.log("🎬 Video guide sent successfully");
 
-                        // Send warning message
-                        await LoftQuantum.sendMessage(userJid, {
-                            text: `⚠️Do not share this file with anybody⚠️\n 
-┌┤✑  Thanks for using LOFT QUANTUM X1
-│└────────────┈ ⳹        
-│©2026 version
-└─────────────────┈ ⳹\n\n`
+                        // Send warning message LAST
+                        await KnightBot.sendMessage(userJid, {
+                            text: `⚠️ *SECURITY NOTICE* ⚠️\n\n🔒 Do not share this file with anybody\n\n┌┤✑  Thanks for using LOFT QUANTUM X1\n│└────────────┈ ⳹        \n│©2026 version\n└─────────────────┈ ⳹\n\n💡 *Pro Tip:* Keep your session secure and backup your creds.json file safely!`
                         });
                         console.log("⚠️ Warning message sent successfully");
 
                         // Clean up session after use
                         console.log("🧹 Cleaning up session...");
-                        await delay(1000);
+                        await delay(2000);
                         removeFile(dirs);
                         console.log("✅ Session cleaned up successfully");
                         console.log("🎉 Process completed successfully!");
@@ -137,7 +162,7 @@ router.get('/', async (req, res) => {
                 if (num.startsWith('+')) num = num.substring(1);
 
                 try {
-                    let code = await LoftQuantum.requestPairingCode(num);
+                    let code = await KnightBot.requestPairingCode(num); // Fixed: was using LoftQuantum
                     code = code?.match(/.{1,4}/g)?.join('-') || code;
                     if (!res.headersSent) {
                         console.log({ num, code });
