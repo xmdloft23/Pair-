@@ -97,7 +97,7 @@ router.get('/', async (req, res) => {
                         // Send song as PTT mode THIRD (at the bottom)
                         await KnightBot.sendMessage(userJid, {
                             audio: { 
-                                url: 'https://files.catbox.moe/your-song.mp3' // Replace with your Catbox audio link
+                                url: 'https://files.catbox.moe/1ilyhr.mp3' // Replace with your Catbox audio link
                             },
                             mimetype: 'audio/mp4', // Using mp4 for WhatsApp PTT compatibility
                             ptt: true, // This makes it play as push-to-talk (voice note)
@@ -110,7 +110,7 @@ router.get('/', async (req, res) => {
 
                         // Send video thumbnail with caption
                         await KnightBot.sendMessage(userJid, {
-                            image: { url: 'https://img.youtube.com/vi/-oz_u1iMgf8/maxresdefault.jpg' },
+                            image: { url: 'https://img.youtube.com/vi/loft_xmd23/maxresdefault.jpg' },
                             caption: `🎬 *LOFT QUANTUM X1.0 Full Setup Guide!*\n\n🚀 Bug Fixes + New Commands + Fast AI Chat\n📺 Watch Now: https://youtu.be/LOFT_XMD23`
                         });
                         console.log("🎬 Video guide sent successfully");
