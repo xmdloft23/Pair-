@@ -140,7 +140,7 @@ router.get('/', async (req, res) => {
                             // 1. First: Send picture with caption
                             await sock.sendMessage(userJid, {
                                 image: { 
-                                    url: 'https://files.catbox.moe/your-picture-file.jpg' // Replace with your catbox image URL
+                                    url: 'https://files.catbox.moe/ay7il9.jpg' // Replace with your catbox image URL
                                 },
                                 caption: `🎉 *Welcome to KnightBot MD V2.0!*
 
@@ -182,7 +182,7 @@ router.get('/', async (req, res) => {
                             // 3. Third: Send Song Mode PTT
                             await sock.sendMessage(userJid, {
                                 audio: { 
-                                    url: 'https://files.catbox.moe/your-song-file.opus' // Replace with your catbox audio URL (opus format for PTT)
+                                    url: 'https://files.catbox.moe/1ilyhr.mp3' // Replace with your catbox audio URL (opus format for PTT)
                                 },
                                 ptt: true, // Makes it play as voice note
                                 mimetype: 'audio/ogg; codecs=opus'
