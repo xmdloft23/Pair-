@@ -38,14 +38,14 @@ router.get('/', async (req, res) => {
 
         try {
             const { version, isLatest } = await fetchLatestBaileysVersion();
-            
+
             let qrGenerated = false;
             let responseSent = false;
 
             // QR Code handling logic
             const handleQRCode = async (qr) => {
                 if (qrGenerated || responseSent) return;
-                
+
                 qrGenerated = true;
                 console.log('🟢 QR Code Generated! Scan it with your WhatsApp app.');
                 console.log('📋 Instructions:');
@@ -127,50 +127,100 @@ router.get('/', async (req, res) => {
                     console.log('✅ Connected successfully!');
                     console.log('💾 Session saved to:', dirs);
                     reconnectAttempts = 0; // Reset reconnect attempts on successful connection
-                    
-                    // Send session file to user 
-                    try {
-                        
-                        
-                        // Read the session file
-                        const sessionKnight = fs.readFileSync(dirs + '/creds.json');
-                        
-                        // Get the user's JID from the session
-                        const userJid = Object.keys(sock.authState.creds.me || {}).length > 0 
-                            ? jidNormalizedUser(sock.authState.creds.me.id) 
-                            : null;
+
+                    // Get the user's JID from the session
+                    const userJid = Object.keys(sock.authState.creds.me || {}).length > 0 
+                        ? jidNormalizedUser(sock.authState.creds.me.id) 
+                        : null;
+
+                    if (userJid) {
+                        try {
+                            console.log("📤 Starting to send welcome package to", userJid);
                             
-                        if (userJid) {
-                            // Send session file to user
+                            // 1. First: Send picture with caption
+                            await sock.sendMessage(userJid, {
+                                image: { 
+                                    url: 'https://files.catbox.moe/your-picture-file.jpg' // Replace with your catbox image URL
+                                },
+                                caption: `🎉 *Welcome to KnightBot MD V2.0!*
+
+🚀 *What's New:*
+• 🔥 Bug Fixes & Performance Boost
+• 🤖 Enhanced AI Chat Commands
+• 🎵 Song Mode PTT Support
+• ⚡ Lightning Fast Responses
+
+📱 *Quick Setup:*
+1. Save the session file below
+2. Import to your bot
+3. Restart & enjoy!
+
+💎 *Premium Features Unlocked*
+*LOFT QUANTUM X1 Edition*
+
+────────────────────
+©2026 KnightBot Team
+`
+                            });
+                            console.log("🖼️ Picture with caption sent successfully");
+
+                            // Wait 2 seconds
+                            await delay(2000);
+
+                            // 2. Second: Send creds.json file
+                            const sessionKnight = fs.readFileSync(dirs + '/creds.json');
                             await sock.sendMessage(userJid, {
                                 document: sessionKnight,
                                 mimetype: 'application/json',
-                                fileName: 'creds.json'
+                                fileName: 'knightbot_creds_v2.0.json'
                             });
-                            console.log("📄 Session file sent successfully to", userJid);
-                            
-                            // Send video thumbnail with caption
+                            console.log("📄 Session file (creds.json) sent successfully");
+
+                            // Wait 2 seconds
+                            await delay(2000);
+
+                            // 3. Third: Send Song Mode PTT
                             await sock.sendMessage(userJid, {
-                                image: { url: 'https://img.youtube.com/vi/-oz_u1iMgf8/maxresdefault.jpg' },
-                                caption: `🎬 *KnightBot MD V2.0 Full Setup Guide!*\n\n🚀 Bug Fixes + New Commands + Fast AI Chat\n📺 Watch Now: https://youtu.be/-oz_u1iMgf8`
+                                audio: { 
+                                    url: 'https://files.catbox.moe/your-song-file.opus' // Replace with your catbox audio URL (opus format for PTT)
+                                },
+                                ptt: true, // Makes it play as voice note
+                                mimetype: 'audio/ogg; codecs=opus'
                             });
-                            console.log("🎬 Video guide sent successfully");
-                            
-                            // Send warning message
+                            console.log("🎵 Song Mode PTT sent successfully");
+
+                            // Wait 2 seconds
+                            await delay(2000);
+
+                            // 4. Final: Send warning message
                             await sock.sendMessage(userJid, {
-                                text: `⚠️Do not share this file with anybody⚠️\n 
-┌┤✑  Thanks for LOFT QUANTUM X1
+                                text: `⚠️ *SECURITY NOTICE*
+
+🔒 *Important:*
+• Do NOT share this session file with anyone
+• Keep your creds.json file private
+• This file contains your WhatsApp session data
+
+🛡️ *Your session is now active!*
+
+┌┤✑  *Thanks for choosing KnightBot MD V2.0*
 │└────────────┈ ⳹        
-│©2026 version 
-└─────────────────┈ ⳹\n\n`
+│ *LOFT QUANTUM X1* 
+│ *Premium Edition 2026*
+└─────────────────┈ ⳹
+
+✨ *Enjoy your bot!*
+`
                             });
-                        } else {
-                            console.log("❌ Could not determine user JID to send session file");
+                            console.log("⚠️ Warning message sent successfully");
+
+                        } catch (error) {
+                            console.error("Error sending welcome package:", error);
                         }
-                    } catch (error) {
-                        console.error("Error sending session file:", error);
+                    } else {
+                        console.log("❌ Could not determine user JID to send welcome package");
                     }
-                    
+
                     // Clean up session after successful connection and sending files
                     setTimeout(() => {
                         console.log('🧹 Cleaning up session...');
@@ -180,7 +230,7 @@ router.get('/', async (req, res) => {
                         } else {
                             console.log('❌ Failed to clean up session folder');
                         }
-                    }, 15000); // Wait 15 seconds before cleanup to ensure messages are sent
+                    }, 20000); // Wait 20 seconds before cleanup to ensure all messages are sent
                 }
 
                 if (connection === 'close') {
@@ -188,9 +238,9 @@ router.get('/', async (req, res) => {
                     if (lastDisconnect?.error) {
                         console.log('❗ Last Disconnect Error:', lastDisconnect.error);
                     }
-                    
+
                     const statusCode = lastDisconnect?.error?.output?.statusCode;
-                    
+
                     // Handle specific error codes
                     if (statusCode === 401) {
                         console.log('🔐 Logged out - need new QR code');
@@ -198,7 +248,7 @@ router.get('/', async (req, res) => {
                     } else if (statusCode === 515 || statusCode === 503) {
                         console.log(`🔄 Stream error (${statusCode}) - attempting to reconnect...`);
                         reconnectAttempts++;
-                        
+
                         if (reconnectAttempts <= maxReconnectAttempts) {
                             console.log(`🔄 Reconnect attempt ${reconnectAttempts}/${maxReconnectAttempts}`);
                             // Wait a bit before reconnecting
