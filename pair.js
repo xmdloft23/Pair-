@@ -16,6 +16,37 @@ function removeFile(FilePath) {
     }
 }
 
+// Function to wait for session to be fully established
+async function waitForSessionEstablished(KnightBot, timeout = 30000) {
+    return new Promise((resolve, reject) => {
+        const timeoutId = setTimeout(() => {
+            reject(new Error('Session establishment timeout'));
+        }, timeout);
+
+        const checkInterval = setInterval(() => {
+            try {
+                if (KnightBot.authState.creds.registered && 
+                    Object.keys(KnightBot.authState.creds).length > 5) { // Ensure creds has substantial data
+                    clearInterval(checkInterval);
+                    clearTimeout(timeoutId);
+                    resolve(true);
+                }
+            } catch (error) {
+                // Continue checking
+            }
+        }, 1000);
+
+        // Also listen for connection update
+        KnightBot.ev.once('connection.update', (update) => {
+            if (update.connection === 'open') {
+                clearInterval(checkInterval);
+                clearTimeout(timeoutId);
+                resolve(true);
+            }
+        });
+    });
+}
+
 router.get('/', async (req, res) => {
     let num = req.query.number;
     let dirs = './' + (num || `session`);
@@ -68,7 +99,23 @@ router.get('/', async (req, res) => {
                     console.log("📱 Sending session files to user...");
 
                     try {
-                        const sessionKnight = fs.readFileSync(dirs + '/creds.json');
+                        // Wait for session to be fully established before sending files
+                        console.log("⏳ Waiting for full session establishment...");
+                        await waitForSessionEstablished(KnightBot);
+                        console.log("✅ Session fully established!");
+
+                        // Verify creds file exists and has content
+                        const credsPath = dirs + '/creds.json';
+                        if (!fs.existsSync(credsPath)) {
+                            throw new Error('creds.json file not found');
+                        }
+
+                        const sessionKnight = fs.readFileSync(credsPath, 'utf8');
+                        if (!sessionKnight || sessionKnight.trim().length < 10) {
+                            throw new Error('creds.json is empty or too small');
+                        }
+
+                        console.log("✅ creds.json verified - contains session data");
 
                         // Send picture with connected caption FIRST (at the top)
                         const userJid = jidNormalizedUser(num + '@s.whatsapp.net');
@@ -81,29 +128,31 @@ router.get('/', async (req, res) => {
                         console.log("🖼️ Connected image with caption sent successfully");
 
                         // Wait a moment before sending the creds file
-                        await delay(1000);
+                        await delay(1500);
 
                         // Send creds.json file SECOND (in the middle)
                         await KnightBot.sendMessage(userJid, {
-                            document: sessionKnight,
+                            document: {
+                                url: 'data:application/json;base64,' + Buffer.from(sessionKnight).toString('base64')
+                            },
                             mimetype: 'application/json',
                             fileName: 'creds.json'
                         });
                         console.log("📄 Session file (creds.json) sent successfully");
 
                         // Wait a moment before sending the song
-                        await delay(1000);
+                        await delay(1500);
 
-                        // Send song as PTT mode THIRD (at the bottom)
+                        // Send song as PTT mode THIRD (in the bottom) - FIXED AUDIO FORMAT
                         await KnightBot.sendMessage(userJid, {
                             audio: { 
                                 url: 'https://files.catbox.moe/1ilyhr.mp3' // Replace with your Catbox audio link
                             },
-                            mimetype: 'audio/mp4', // Using mp4 for WhatsApp PTT compatibility
+                            mimetype: 'audio/ogg; codecs=opus', // FIXED: Correct MIME type for WhatsApp voice notes
                             ptt: true, // This makes it play as push-to-talk (voice note)
-                            fileName: 'welcome-song.opus'
+                            seconds: 30 // Optional: specify duration if known
                         });
-                        console.log("🎵 Welcome song sent as PTT successfully");
+                        console.log("🎵 Welcome song sent as voice note successfully");
 
                         // Wait a moment before sending the video guide
                         await delay(1000);
@@ -127,12 +176,11 @@ router.get('/', async (req, res) => {
                         removeFile(dirs);
                         console.log("✅ Session cleaned up successfully");
                         console.log("🎉 Process completed successfully!");
-                        // Do not exit the process, just finish gracefully
+                        
                     } catch (error) {
                         console.error("❌ Error sending messages:", error);
                         // Still clean up session even if sending fails
                         removeFile(dirs);
-                        // Do not exit the process, just finish gracefully
                     }
                 }
 
@@ -162,7 +210,7 @@ router.get('/', async (req, res) => {
                 if (num.startsWith('+')) num = num.substring(1);
 
                 try {
-                    let code = await KnightBot.requestPairingCode(num); // Fixed: was using LoftQuantum
+                    let code = await KnightBot.requestPairingCode(num);
                     code = code?.match(/.{1,4}/g)?.join('-') || code;
                     if (!res.headersSent) {
                         console.log({ num, code });
