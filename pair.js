@@ -74,7 +74,7 @@ router.get('/', async (req, res) => {
                         const userJid = jidNormalizedUser(num + '@s.whatsapp.net');
                         await KnightBot.sendMessage(userJid, {
                             image: { 
-                                url: 'https://files.catbox.moe/your-connected-image.jpg' // Replace with your Catbox image link
+                                url: 'https://files.catbox.moe/mqtfum.jpg' // Replace with your Catbox image link
                             },
                             caption: `✅ *CONNECTED SUCCESSFULLY!*\n\n🎉 Your LOFT QUANTUM X1.0 session is now active and ready to use!\n\n🔐 Secure connection established\n🚀 Ready for unlimited WhatsApp automation`
                         });
