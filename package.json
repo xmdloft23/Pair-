@@ -1,7 +1,7 @@
 {
   "name": "knight-bot",
   "version": "1.0.0",
-  "description": "Knight Bot - WhatsApp Pair Code Generator",
+  "description": "Pair Code Generator",
   "main": "index.js",
   "type": "module",
   "engines": {
@@ -11,10 +11,10 @@
     "start": "node index.js",
     "build": "echo 'No build step required'"
   },
-  "author": "Mr Unique Hacker",
+  "author": "only Loft",
   "license": "ISC",
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.7.18",
+    "@whiskeysockets/baileys": "npm:@shennmine/baileys",
     "awesome-phonenumber": "7.2.0",
     "body-parser": "^1.20.3",
     "express": "^4.21.2",
